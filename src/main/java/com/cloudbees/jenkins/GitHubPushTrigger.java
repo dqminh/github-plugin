@@ -50,6 +50,9 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Kohsuke Kawaguchi
  */
 public class GitHubPushTrigger extends Trigger<AbstractProject<?,?>> implements GitHubTrigger {
+
+    private static final String HOOK_NAME = System.getProperty("com.cloudbees.jenkins.GitHubPushTrigger.HOOK_NAME", "jenkins");
+
     @DataBoundConstructor
     public GitHubPushTrigger() {
     }
@@ -167,7 +170,7 @@ public class GitHubPushTrigger extends Trigger<AbstractProject<?,?>> implements 
 
     private boolean createJenkinsHook(GHRepository repo, URL url) {
         try {
-            repo.createHook("jenkins", Collections.singletonMap("jenkins_hook_url", url.toExternalForm()), null, true);
+            repo.createHook(HOOK_NAME, Collections.singletonMap("jenkins_hook_url", url.toExternalForm()), null, true);
             return true;
         } catch (IOException e) {
             throw new GHException("Failed to update jenkins hooks", e);
